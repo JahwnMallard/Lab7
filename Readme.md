@@ -3,16 +3,7 @@
 
 C2C John Miller, ECE 382
 ADC library for the MSP430, designed for the ECE382 robot. 
-Hardware diagram below:
-		       _________________
-        		|P1.0		   |
-			|P1.1		   |
-			|P1.2   	   |								Left Sensor	|P1.3	          |		
-	Center Sensor	|P1.4	MSP430	   |
-	Right Sensor	|P1.5            |
-			|P1.6		   |	
-			|P1.7		   |	
-			|________________|	
+
 	
 -void `initADC()`
 	- initializes the pins and timer of the ADC system. Left sensor(A3) is on 1.3, Center Sensor(A4) is on 1.4, and Right Sensor(A5) is on 1.5
