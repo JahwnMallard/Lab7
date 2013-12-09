@@ -9,42 +9,37 @@
 #include "ADC_Library.h"
 
 void initADC() {
-	WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
+
 	ADC10CTL0 = ADC10SHT_3 + ADC10ON + ADC10IE; // ADC10ON, interrupt enabled
-	ADC10CTL1 = INCH_3;                       // input A2,
-	ADC10AE0 |= BIT3;                         // PA.1 ADC option select
-	ADC10AE0 |= BIT4;                         // PA.1 ADC option select
-	ADC10AE0 |= BIT5;                         // PA.1 ADC option select
 	ADC10CTL1 |= ADC10SSEL1 | ADC10SSEL0;                // Select SMCLK
+	ADC10CTL1 |= ADC10DIV_7; //slow clock to slowest setting
+
 }
 
-void changeInputChannel(char channel) {
-	ADC10CTL0 &= ~ENC;             // Sampling and conversion start
-	ADC10CTL1 &= ~(INCH_3|INCH_4|INCH_5);
-	ADC10CTL1 |= channel;
+int readLeftSensor() {
+	ADC10CTL0 &= ~ENC;                   // Allows for channel switching
+	ADC10CTL1 = INCH_3;			         //set to channel A3
+	ADC10AE0 |= BIT3;				     //enable channel A3
+	ADC10CTL0 |= ENC + ADC10SC;          // Sampling and conversion start
+	__bis_SR_register(CPUOFF + GIE);	 //turn cpu off
+	return ADC10MEM;
 }
 
-void startConversion() {
+int readRightSensor() {
+	ADC10CTL0 &= ~ENC;             // Allows for channel switching
+	ADC10CTL1 = INCH_5;			   // Set to channel A5
+	ADC10AE0 |= BIT5;			   // Enable channel A5
+	ADC10CTL0 |= ENC + ADC10SC;    // Sampling and conversion start
+	__bis_SR_register(CPUOFF + GIE); //turn cpu off
+	return ADC10MEM;
+}
+
+int readCenterSensor() {
+	ADC10CTL0 &= ~ENC;             // Allows for channel switching
+	ADC10CTL1 = INCH_4;			   // Set to channel A4
+	ADC10AE0 |= BIT4;			   // Enable channel A4
 	ADC10CTL0 |= ENC + ADC10SC;             // Sampling and conversion start
 	__bis_SR_register(CPUOFF + GIE);
-	// LPM0, ADC10_ISR will force exit
-}
-
-int readLeftSensor(){
-	changeInputChannel( INCH_3);
-	startConversion();
-	return ADC10MEM;
-}
-
-int readRightSensor(){
-	changeInputChannel(INCH_5);
-	startConversion();
-	return ADC10MEM;
-}
-
-int readCenterSensor(){
-	changeInputChannel(INCH_4);
-	startConversion();
 	return ADC10MEM;
 }
 

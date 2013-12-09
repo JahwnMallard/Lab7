@@ -6,23 +6,32 @@
  */
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
-    P1DIR |= 0x01;                            // Set P1.0 to output direction
-    P1DIR |= 0x06;                            // Set P1.0 to output direction
-    P1OUT &= ~0x01;
-    P1OUT &= ~0x06;
+
+    P1DIR |= BIT0;                            // Set P1.0 to output direction
+    P1DIR |= BIT6;                            // Set P1.6 to output direction
+
+    P1OUT &= ~BIT0;
+    P1OUT &= ~BIT6;
+
     initADC();
+    int output;
     while(1){
-    	if (readLeftSensor()>0x16C){
-    		P1OUT |= 0x01;                        // Set P1.0 LED on
+    	output = readLeftSensor();
+    	if (output>0x0340){
+    		P1OUT |= BIT0;                        // Set P1.0 LED on
     	}else{
-    		P1OUT &= ~0x01;
+    		P1OUT &= ~BIT0;
     	}
 
-    	if (readRightSensor()>0x16C){
-    		P1OUT |= 0x06;                        // Set P1.0 LED on
+    	_delay_cycles(1000);
+
+    	output = readRightSensor();
+    	if (output>0x0340){
+    		P1OUT |= BIT6;                        // Set P1.0 LED on
     	}else{
-    		P1OUT &= ~0x06;
+    		P1OUT &= ~BIT6;
     	}
+    	_delay_cycles(1000);
     }
     return 0;
 }

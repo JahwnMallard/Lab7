@@ -2,17 +2,23 @@
  * ADC_Library.h
  *
  *  Created on: Dec 5, 2013
- *      Author: Administrator
+ *      Author: C2C John Miller
  */
 
 #ifndef ADC_LIBRARY_H_
 #define ADC_LIBRARY_H_
 
+//initializes the ADC system
 void initADC();
-void changeInputChannel(char channel);
-void startConversion();
-//#pragma vector=ADC10_VECTOR;
-//__interrupt void ADC10_ISR(void);
+
+//reads from the right sensor and returns its value
+int readRightSensor();
+
+//reads from the left sensor and returns its value
+int readLeftSensor();
+
+//reads from the center sensor and returns its value
+int readCenterSensor();
 
 
 
